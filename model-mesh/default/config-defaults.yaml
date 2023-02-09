@@ -15,7 +15,7 @@
 podsPerRuntime: 2
 headlessService: true
 modelMeshImage:
-  name: quay.io/rgeada/model0mesh
+  name: quay.io/rgeada/model-mesh
   tag: latest
 modelMeshResources:
   requests:
