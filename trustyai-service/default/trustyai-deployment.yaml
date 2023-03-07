@@ -56,20 +56,20 @@ spec:
     spec:
       containers:
         - env:
-            - name: PVC_INPUT_FILENAME
+            - name: STORAGE_DATA_FILENAME
               valueFrom:
                 configMapKeyRef:
-                  key: pvc_input_filename
+                  key: storage_data_filename
                   name: trustyai-config
             - name: SERVICE_STORAGE_FORMAT
               valueFrom:
                 configMapKeyRef:
                   key: service_storage_format
                   name: trustyai-config
-            - name: PVC_OUTPUT_FILENAME
+            - name: STORAGE_DATA_FOLDER
               valueFrom:
                 configMapKeyRef:
-                  key: pvc_output_filename
+                  key: storage_data_folder
                   name: trustyai-config
             - name: SERVICE_BATCH_SIZE
               valueFrom:
@@ -96,7 +96,7 @@ spec:
                 configMapKeyRef:
                   key: service_kserve_target
                   name: trustyai-config
-          image: quay.io/trustyai/trustyai-service:odh-1.24-prerelease-0
+          image: quay.io/ruimvieira/trustyai-service:999-SNAPSHOT
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
