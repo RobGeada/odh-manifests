@@ -6,3 +6,4 @@ commonLabels:
 resources:
 - ../default
 - trustyai-configmap.yaml
+- model-serving-config.yaml
