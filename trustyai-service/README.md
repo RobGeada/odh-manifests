@@ -16,22 +16,25 @@ to `http://trustyai-service/consumer/kserve/v2`
 apiVersion: kfdef.apps.kubeflow.org/v1
 kind: KfDef
 metadata:
-  name: trustyai
+  name: odh-trustyai
 spec:
   applications:
-  - kustomizeConfig:
-    repoRef:
-      name: manifests
-      path: odh-common
-    name: odh-common
-  - kustomizeConfig:
-    repoRef:
-      name: manifests
-      path: explainability-service/manifests/opendatahub
-    name: trustyai
+    - kustomizeConfig:
+        repoRef:
+          name: manifests
+          path: odh-common
+      name: odh-common
+    - kustomizeConfig:
+        repoRef:
+          name: manifests
+          path: explainability-service/manifests/opendatahub
+      name: trustyai
   repos:
+    - name: odh-manifests
+      uri: https://api.github.com/repos/opendatahub-io/odh-manifests/tarball/master
     - name: manifests
       uri: https://api.github.com/repos/opendatahub-io/odh-manifests/tarball/master
   version: master
+
 ```
 
