@@ -19,11 +19,16 @@ metadata:
   name: trustyai
 spec:
   applications:
-    - kustomizeConfig:
-        repoRef:
-          name: manifests
-          path: explainability-service/manifests/opendatahub
-      name: trustyai
+  - kustomizeConfig:
+    repoRef:
+      name: manifests
+      path: odh-common
+    name: odh-common
+  - kustomizeConfig:
+    repoRef:
+      name: manifests
+      path: explainability-service/manifests/opendatahub
+    name: trustyai
   repos:
     - name: manifests
       uri: https://api.github.com/repos/opendatahub-io/odh-manifests/tarball/master
