@@ -27,11 +27,9 @@ spec:
     - kustomizeConfig:
         repoRef:
           name: manifests
-          path: explainability-service/manifests/opendatahub
+          path: trustyai-service
       name: trustyai
   repos:
-    - name: odh-manifests
-      uri: https://api.github.com/repos/opendatahub-io/odh-manifests/tarball/master
     - name: manifests
       uri: https://api.github.com/repos/opendatahub-io/odh-manifests/tarball/master
   version: master
