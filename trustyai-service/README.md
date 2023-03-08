@@ -19,11 +19,6 @@ metadata:
   name: trustyai
 spec:
   applications:
-      - kustomizeConfig:
-        repoRef:
-          name: manifests
-          path: odh-common
-      name: odh-common
     - kustomizeConfig:
         repoRef:
           name: manifests
