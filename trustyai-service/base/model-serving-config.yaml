@@ -4,4 +4,4 @@ metadata:
   name: model-serving-config
 data:
   config.yaml: |
-    payloadProcessor: "http://trustyai-service/consumer/kserve/v2"
+    payloadProcessors: "http://trustyai-service/consumer/kserve/v2"
