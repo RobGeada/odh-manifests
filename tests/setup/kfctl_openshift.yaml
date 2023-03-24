@@ -57,6 +57,11 @@ spec:
         name: manifests
         path: data-science-pipelines
     name: data-science-pipelines
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: trustyai-service
+    name: trustyai
   repos:
   - name: manifests
     uri: https://github.com/red-hat-data-services/odh-manifests/tarball/master
