@@ -18,7 +18,7 @@ os::test::junit::declare_suite_start "$MY_SCRIPT"
 function get_authentication(){
   header "Getting authentication credentials to cluster"
   oc adm policy add-role-to-user view -n ${ODHPROJECT} --rolebinding-name "view-$TEST_USER" $TEST_USER
-  TESTUSER_BEARER_TOKEN="$(curl -kiL -u $TEST_USER:$TEST_PASS 'X-CSRF-Token: xxx' $OPENSHIFT_OAUTH_ENDPOINT'/oauth/authorize?response_type=token&client_id=openshift-challenging-client' | grep -oP 'access_token=\K[^&]*')"
+  TESTUSER_BEARER_TOKEN="$(curl -kiL -u $TEST_USER:$TEST_PASS -H 'X-CSRF-Token: xxx' $OPENSHIFT_OAUTH_ENDPOINT'/oauth/authorize?response_type=token&client_id=openshift-challenging-client' | grep -oP 'access_token=\K[^&]*')"
 }
 
 function check_trustyai_resources() {
@@ -33,7 +33,7 @@ function check_trustyai_resources() {
 
 function deploy_model() {
     header "Deploying model into ModelMesh"
-    oc new-project $MM_NAMESPACE || true
+    oc new-project $MM_NAMESPACE
     os::cmd::expect_success "oc project $MM_NAMESPACE"
     os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/modelmesh/service_account.yaml -n ${MM_NAMESPACE}"
     oc label namespace $MM_NAMESPACE "modelmesh-enabled=true" --overwrite=true || echo "Failed to apply modelmesh-enabled label."
@@ -46,6 +46,7 @@ function deploy_model() {
     os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/sample-minio.yaml -n ${MM_NAMESPACE}"
     #os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/openvino-serving-runtime.yaml -n ${MM_NAMESPACE}"
     os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/openvino-inference-service.yaml -n ${MM_NAMESPACE}"
+    sleep 30
 
 
 }
@@ -79,7 +80,8 @@ function generate_data(){
     for i in {1..500};
     do
       DATA=$(sed "s/\[40.83, 3.5, 0.5, 0\]/\[$(($RANDOM % 2)),$(($RANDOM / 128)),$(($RANDOM / 128)), $(($RANDOM / 128)) \]/" ${RESOURCEDIR}/trustyai/data.json)
-      curl -k https://$INFER_ROUTE/infer -d "$DATA"  -H 'Authorization: Bearer $token' -i >/dev/null 2>&1
+      curl -k https://$INFER_ROUTE/infer -d "$DATA"  -H 'Authorization: Bearer $token' -i > /dev/null 2>&1 &
+      sleep .01
     done
 }
 
@@ -143,6 +145,7 @@ check_mm_resources
 check_communication
 generate_data
 schedule_and_check_request
+test_prometheus_scraping
 teardown_trustyai_test
 
 
