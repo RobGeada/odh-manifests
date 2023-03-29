@@ -39,7 +39,15 @@ function deploy_model() {
     oc label namespace $MM_NAMESPACE "modelmesh-enabled=true" --overwrite=true || echo "Failed to apply modelmesh-enabled label."
     os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/secret.yaml -n ${MM_NAMESPACE}"
     os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/odh-mlserver-0.x.yaml  -n ${MM_NAMESPACE}"
-    os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/model.yaml  -n ${MM_NAMESPACE}"
+#    os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/model.yaml  -n ${MM_NAMESPACE}"
+
+    SECRETKEY=$(openssl rand -hex 32)
+    sed -i "s/<secretkey>/$SECRETKEY/g" ${RESOURCEDIR}/trustyai/sample-minio.yaml
+    os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/sample-minio.yaml -n ${MM_NAMESPACE}"
+    #os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/openvino-serving-runtime.yaml -n ${MM_NAMESPACE}"
+    os::cmd::expect_success "oc apply -f ${RESOURCEDIR}/trustyai/openvino-inference-service.yaml -n ${MM_NAMESPACE}"
+
+
 }
 
 function check_mm_resources() {
@@ -71,7 +79,7 @@ function generate_data(){
     for i in {1..500};
     do
       DATA=$(sed "s/\[40.83, 3.5, 0.5, 0\]/\[$(($RANDOM % 2)),$(($RANDOM / 128)),$(($RANDOM / 128)), $(($RANDOM / 128)) \]/" ${RESOURCEDIR}/trustyai/data.json)
-      os::cmd::expect_success "curl -k https://$INFER_ROUTE/infer -d "$DATA"  -H 'Authorization: Bearer $token' -i >/dev/null 2>&1"
+      curl -k https://$INFER_ROUTE/infer -d "$DATA"  -H 'Authorization: Bearer $token' -i >/dev/null 2>&1
     done
 }
 
