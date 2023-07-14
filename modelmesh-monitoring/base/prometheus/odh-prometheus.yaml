@@ -37,10 +37,7 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       modelmesh-service: modelmesh-serving
-  serviceMonitorNamespaceSelector:
-    matchExpressions:
-      - key: kubernetes.io/metadata.name
-        operator: Exists
+  serviceMonitorNamespaceSelector: {}
   volumes:
     - name: prometheus-tls
       secret:
