@@ -34,13 +34,8 @@ spec:
           name: prometheus-tls
         - mountPath: /etc/oauth/config
           name: oauth-config
-  serviceMonitorSelector:
-    matchLabels:
-      modelmesh-service: modelmesh-serving
-  serviceMonitorNamespaceSelector:
-    matchExpressions:
-      - key: kubernetes.io/metadata.name
-        operator: Exists
+  serviceMonitorSelector: {}
+  serviceMonitorNamespaceSelector: {}
   volumes:
     - name: prometheus-tls
       secret:
