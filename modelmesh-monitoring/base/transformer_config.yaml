@@ -1,0 +1,7 @@
+varReference:
+  - path: spec/containers/env/value
+    kind: Prometheus
+  - path: subjects/namespace
+    kind: ClusterRoleBinding
+  - path: metadata/namespace
+    kind: ServiceAccount
