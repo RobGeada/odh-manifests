@@ -1,27 +1,50 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- prometheus
-- prometheus-operator
-- servicemonitors
+ - prometheus
+ - prometheus-operator
+ - servicemonitors
+
 configMapGenerator:
   - name: model-monitoring-parameters
     envs:
       - params.env
 configurations:
   - params.yaml
-vars:
-  - name: deployment-namespace
-    objref:
+
+replacements:
+- source:
       kind: ConfigMap
       name: model-monitoring-parameters
-      apiVersion: v1
-    fieldref:
-      fieldpath: metadata.namespace
-  - name: monitoring-namespace
-    objref:
-      kind: ConfigMap
-      name: model-monitoring-parameters
-      apiVersion: v1
-    fieldref:
-      fieldpath: data.monitoring-namespace
+      fieldPath: data.deployment-namespace #metadata.namespace
+  targets:
+  - select:
+      kind: Prometheus
+      name: odh-model-monitoring
+    fieldPaths:
+      - spec.containers.[name=oauth-proxy].env.[name=DEPLOYMENT_NAMESPACE].value
+  - select:
+      kind: ClusterRoleBinding
+      name: prometheus-token-access
+    fieldPaths:
+      - subjects.[name=prometheus-custom].namespace
+  - select:
+      kind: ServiceAccount
+      name: prometheus-custom
+    fieldPaths:
+      - metadata.namespace
+  - select:
+      kind: ClusterRoleBinding
+      name: odh-namespace-read
+    fieldPaths:
+      - subjects.[name=prometheus-custom].namespace
+  - select:
+      kind: ClusterRoleBinding
+      name: odh-namespace-read
+    fieldPaths:
+      - subjects.[name=prometheus-custom].namespace
+  - select:
+      kind: ClusterRoleBinding
+      name: odh-prometheus-operator
+    fieldPaths:
+      - subjects.[name=odh-prometheus-operator].namespace
