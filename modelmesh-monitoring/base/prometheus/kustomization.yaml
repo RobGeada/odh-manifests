@@ -7,3 +7,18 @@ resources:
 - serviceaccount.yaml
 - rbac
 - route.yaml
+vars:
+  - name: deployment-namespace
+    objref:
+      kind: ConfigMap
+      name: model-monitoring-parameters
+      apiVersion: v1
+    fieldref:
+      fieldpath: metadata.namespace
+  - name: monitoring-namespace
+    objref:
+      kind: ConfigMap
+      name: model-monitoring-parameters
+      apiVersion: v1
+    fieldref:
+      fieldpath: data.monitoring-namespace
