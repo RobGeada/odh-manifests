@@ -39,7 +39,9 @@ spec:
       modelmesh-service: modelmesh-serving
   serviceMonitorNamespaceSelector:
     matchExpressions:
-      - key: kubernetes.io/metadata.name
+      - key: modelmesh-enabled
+        operator: Exists
+      - key: metadata.name
         operator: Exists
   volumes:
     - name: prometheus-tls
